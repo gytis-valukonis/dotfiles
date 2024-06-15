@@ -1,11 +1,11 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
 config.enable_wayland = false
 
-config.color_scheme = 'Atom (Gogh)'
-config.font = wezterm.font 'Fira Code'
+config.color_scheme = "nord"
+config.font = wezterm.font("GeistMono Nerd Font Mono")
 
 config.enable_tab_bar = false
 config.tab_bar_at_bottom = true
