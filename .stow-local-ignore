@@ -2,3 +2,4 @@ scripts
 .git
 ^/README.*
 .gitignore
+.gitmodules
