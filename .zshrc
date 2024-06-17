@@ -9,7 +9,7 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]] || eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
 
