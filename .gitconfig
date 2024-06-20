@@ -1,0 +1,23 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Gytis Valukonis
+	email = gytis.valukonis@gmail.com
+[core]
+	editor = nvim
+	excludesFile = ~/.git/.gitignore
+	pager = delta
+[pull]
+	rebase = true
+[pager]
+	branch = false
+[fetch]
+	prune = true
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+[merge]
+	conflictstyle = diff3
+[diff]
+	colorMoved = default
+

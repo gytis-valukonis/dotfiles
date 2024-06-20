@@ -38,7 +38,9 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   [[blocks.segments]]
     type = 'aws'
     style = 'plain'
-    foreground = 'orange'
+    foreground_templates = [
+      '{{ if contains "prod" .Profile }}lightRed{{else}}lightBlue{{end}}'
+    ]
     background = 'transparent'
     template = '{{ if .Profile }}{{.Profile}}{{end}} {{ if .Region }}({{.Region}}){{end}}'
 
@@ -47,7 +49,7 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
     style = 'plain'
     foreground = 'yellow'
     background = 'transparent'
-    template = '{{ div .Ms 1000 }}s'
+    template = ' {{ div .Ms 1000 }}s'
 
     [blocks.segments.properties]
       threshold = 5000
