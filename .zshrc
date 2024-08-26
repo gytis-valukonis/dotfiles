@@ -41,11 +41,13 @@ setopt hist_find_no_dups
 
 eval "$(fzf --zsh)"
 
-export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
     --color=fg:#e5e9f0,bg:#3b4252,hl:#81a1c1
     --color=fg+:#e5e9f0,bg+:#3b4252,hl+:#81a1c1
     --color=info:#eacb8a,prompt:#bf6069,pointer:#b48dac
-    --color=marker:#a3be8b,spinner:#b48dac,header:#a3be8b'
+    --color=marker:#a3be8b,spinner:#b48dac,header:#a3be8b
+    --bind 'ctrl-y:execute(readlink -f {} | xclip -selection clipboard)'
+    --bind 'ctrl-alt-y:execute-silent(xclip -selection clipboard {})'"
 
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAN"
@@ -105,3 +107,6 @@ tmux-window-name() {
 }
 
 add-zsh-hook chpwd tmux-window-name
+
+# bun completions
+[ -s "/Users/gytis/.bun/_bun" ] && source "/Users/gytis/.bun/_bun"

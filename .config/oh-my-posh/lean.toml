@@ -2,7 +2,8 @@
 
 version = 2
 final_space = true
-console_title_template = '{{ .Shell }} in {{ .Folder }}'
+console_title_template = '{{ .Folder }}'
+auto_upgrade = true
 
 [[blocks]]
   type = 'prompt'
@@ -30,11 +31,7 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
       branch_icon = ''
       fetch_status = true
       commit_icon = '@'
-
-[[blocks]]
-  type = 'rprompt'
-  overflow = 'hidden'
-
+  
   [[blocks.segments]]
     type = 'aws'
     style = 'plain'
@@ -42,7 +39,13 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
       '{{ if contains "prod" .Profile }}lightRed{{else}}lightBlue{{end}}'
     ]
     background = 'transparent'
-    template = '{{ if .Profile }}{{.Profile}}{{end}} {{ if .Region }}({{.Region}}){{end}}'
+    template = '{{ if .Profile }}[{{.Profile}}{{end}} {{ if .Region }}({{.Region}})]{{end}}'
+
+
+
+[[blocks]]
+  type = 'rprompt'
+  overflow = 'hidden'
 
   [[blocks.segments]]
     type = 'executiontime'
