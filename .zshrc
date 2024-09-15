@@ -15,6 +15,8 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
 
 autoload -U compinit && compinit
 
+eval "$(direnv hook zsh)"
+
 # --- local .zshrc ---
 
 [[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
