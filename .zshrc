@@ -21,6 +21,8 @@ eval "$(direnv hook zsh)"
 
 [[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
 
+alias tf="terraform"
+
 # --- completions ---
 
 bindkey -e
@@ -112,3 +114,4 @@ add-zsh-hook chpwd tmux-window-name
 
 # bun completions
 [ -s "/Users/gytis/.bun/_bun" ] && source "/Users/gytis/.bun/_bun"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
