@@ -51,7 +51,8 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
     --color=info:#eacb8a,prompt:#bf6069,pointer:#b48dac
     --color=marker:#a3be8b,spinner:#b48dac,header:#a3be8b
     --bind 'ctrl-y:execute(readlink -f {} | xclip -selection clipboard)'
-    --bind 'ctrl-alt-y:execute-silent(xclip -selection clipboard {})'"
+    --bind 'ctrl-alt-y:execute-silent(xclip -selection clipboard {})'
+    --bind 'ctrl-j:preview-down,ctrl-k:preview-up'"
 
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAN"
