@@ -108,7 +108,7 @@ alias cd="z"
 # --- tmux integration ---
 
 tmux-window-name() {
-	($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.py &)
+	($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.sh &)
 }
 
 add-zsh-hook chpwd tmux-window-name
