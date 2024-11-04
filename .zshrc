@@ -13,6 +13,10 @@ zinit light zsh-users/zsh-autosuggestions
 
 [[ ! -f /opt/homebrew/bin/brew ]] || eval $(/opt/homebrew/bin/brew shellenv)
 
+if [ -f ~/.zshrc.local ]; then
+    source ~/.zshrc.local
+fi
+
 if brew list asdf &>/dev/null; then
     source "$(brew --prefix asdf)/libexec/asdf.sh"
 else
