@@ -13,6 +13,12 @@ zinit light zsh-users/zsh-autosuggestions
 
 [[ ! -f /opt/homebrew/bin/brew ]] || eval $(/opt/homebrew/bin/brew shellenv)
 
+if brew list asdf &>/dev/null; then
+    source "$(brew --prefix asdf)/libexec/asdf.sh"
+else
+    echo "asdf is not installed, cannot source asdf.sh"
+fi
+
 eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
 
 autoload -U compinit && compinit
