@@ -9,6 +9,13 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 
+export EDITOR='nvim'
+autoload -U edit-command-line
+
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
+
 [[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]] || eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 [[ ! -f /opt/homebrew/bin/brew ]] || eval $(/opt/homebrew/bin/brew shellenv)
