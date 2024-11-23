@@ -1,6 +1,4 @@
-if [ -f ~/.zshrc.local ]; then
-    source ~/.zshrc.local
-fi
+[[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -24,8 +22,6 @@ bindkey '^x^e' edit-command-line
 
 if brew list asdf &>/dev/null; then
     source "$(brew --prefix asdf)/libexec/asdf.sh"
-else
-    echo "asdf is not installed, cannot source asdf.sh"
 fi
 
 eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
@@ -33,10 +29,6 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
 autoload -U compinit && compinit
 
 eval "$(direnv hook zsh)"
-
-# --- local .zshrc ---
-
-[[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
 
 alias tf="terraform"
 
@@ -122,14 +114,5 @@ eval "$(zoxide init zsh)"
 
 alias cd="z"
 
-# --- tmux integration ---
-
-tmux-window-name() {
-	($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.sh &)
-}
-
-add-zsh-hook chpwd tmux-window-name
-
 # bun completions
-[ -s "/Users/gytis/.bun/_bun" ] && source "/Users/gytis/.bun/_bun"
 source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
