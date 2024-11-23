@@ -1,3 +1,7 @@
+if [ -f ~/.zshrc.local ]; then
+    source ~/.zshrc.local
+fi
+
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
@@ -16,13 +20,7 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
-[[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]] || eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-[[ ! -f /opt/homebrew/bin/brew ]] || eval $(/opt/homebrew/bin/brew shellenv)
-
-if [ -f ~/.zshrc.local ]; then
-    source ~/.zshrc.local
-fi
+[[ ! -f "$(brew --prefix)/bin/brew" ]] || eval $($(brew --prefix)/bin/brew shellenv)
 
 if brew list asdf &>/dev/null; then
     source "$(brew --prefix asdf)/libexec/asdf.sh"
