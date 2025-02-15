@@ -40,8 +40,8 @@ config.keys = {
 	{ key = "h", mods = "SUPER", action = wezterm.action.DisableDefaultAssignment },
 	{ key = "k", mods = "SUPER", action = wezterm.action.DisableDefaultAssignment },
 	{ key = "f", mods = "SUPER", action = wezterm.action.DisableDefaultAssignment },
-	{ key = "{", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTabRelative(-1) },
-	{ key = "}", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTabRelative(1) },
+	{ key = "h", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTabRelative(-1) },
+	{ key = "l", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTabRelative(1) },
 }
 
 return config

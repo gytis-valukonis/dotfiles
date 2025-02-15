@@ -56,6 +56,11 @@ vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
+vim.keymap.set("n", "<C-h>", "<C-w>h", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { noremap = true, silent = true })
+
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
@@ -102,6 +107,7 @@ require("lazy").setup({
 			{ "|", "<CMD>Neotree reveal<CR>", { desc = "NeoTree reveal" } },
 		},
 		opts = {
+			close_if_last_window = true,
 			default_component_configs = {
 				name = {
 					use_git_status_colors = false,
@@ -118,6 +124,7 @@ require("lazy").setup({
 				},
 				window = {
 					mappings = {
+						["w"] = "open",
 						["\\"] = "close_window",
 					},
 				},
@@ -378,7 +385,7 @@ require("lazy").setup({
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "isort", "flake8", "black" },
+				python = { "black", "isort" },
 			},
 		},
 	},
