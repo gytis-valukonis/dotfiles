@@ -12,5 +12,5 @@ brew install tlrc
 brew install thefuck
 brew install zoxide
 brew install --cask font-geist-mono-nerd-font
-brew install direnv
-brew install asdf
+brew install mise
+brew install usage

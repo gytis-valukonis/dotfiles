@@ -18,17 +18,19 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
-[[ ! -f "$(brew --prefix)/bin/brew" ]] || eval $($(brew --prefix)/bin/brew shellenv)
-
-if brew list asdf &>/dev/null; then
-    source "$(brew --prefix asdf)/libexec/asdf.sh"
+if [ -d "/home/linuxbrew/.linuxbrew/" ]; then
+    BREW_DIR="/home/linuxbrew/.linuxbrew"
+else
+    BREW_DIR="$(brew --prefix)"
 fi
+
+eval $($BREW_DIR/bin/brew shellenv)
+
+[[ ! -f "$(brew --prefix)/bin/brew" ]] || eval $($(brew --prefix)/bin/brew shellenv)
 
 eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
 
 autoload -U compinit && compinit
-
-eval "$(direnv hook zsh)"
 
 alias tf="terraform"
 
@@ -114,5 +116,6 @@ eval "$(zoxide init zsh)"
 
 alias cd="z"
 
-# bun completions
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+# ---- mise ----
+mise completion zsh  > $(brew --prefix zsh)/share/zsh/functions/_mise
+eval "$(mise activate zsh)"
