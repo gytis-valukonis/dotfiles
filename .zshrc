@@ -12,11 +12,6 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 
 export EDITOR='nvim'
-autoload -U edit-command-line
-
-zle -N edit-command-line
-bindkey '^xe' edit-command-line
-bindkey '^x^e' edit-command-line
 
 if [ -d "/home/linuxbrew/.linuxbrew/" ]; then
     BREW_DIR="/home/linuxbrew/.linuxbrew"
@@ -25,8 +20,6 @@ else
 fi
 
 eval $($BREW_DIR/bin/brew shellenv)
-
-[[ ! -f "$(brew --prefix)/bin/brew" ]] || eval $($(brew --prefix)/bin/brew shellenv)
 
 eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
 
@@ -119,3 +112,10 @@ alias cd="z"
 # ---- mise ----
 mise completion zsh  > $(brew --prefix zsh)/share/zsh/functions/_mise
 eval "$(mise activate zsh)"
+
+#editor commands
+autoload -U edit-command-line
+
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
