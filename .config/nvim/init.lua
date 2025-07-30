@@ -77,10 +77,8 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
-	{ "numToStr/Comment.nvim", opts = {} },
-
+	"NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
@@ -91,6 +89,19 @@ require("lazy").setup({
 				topdelete = { text = "‾" },
 				changedelete = { text = "~" },
 			},
+		},
+	},
+	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim", -- required
+			"sindrets/diffview.nvim", -- optional - Diff integration
+
+			-- Only one of these is needed.
+			"nvim-telescope/telescope.nvim", -- optional
+			"ibhagwan/fzf-lua", -- optional
+			"echasnovski/mini.pick", -- optional
+			"folke/snacks.nvim", -- optional
 		},
 	},
 	{
@@ -356,6 +367,8 @@ require("lazy").setup({
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 			require("mason-lspconfig").setup({
+				ensure_installed = {},
+				automatic_enable = false,
 				handlers = {
 					function(server_name)
 						local server = servers[server_name] or {}
