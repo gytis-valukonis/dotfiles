@@ -128,6 +128,8 @@ require("lazy").setup({
 				position = "right",
 			},
 			filesystem = {
+				hijack_netrw_behavior = "open_default",
+				use_libuv_file_watcher = true,
 				filtered_items = {
 					hide_dotfiles = false,
 					hide_gitignore = false,
@@ -416,13 +418,6 @@ require("lazy").setup({
 			local servers = {
 				pyright = {},
 
-				eslint = {
-					autoFixOnSave = true,
-					format = {
-						enable = true,
-					},
-				},
-
 				lua_ls = {
 					settings = {
 						Lua = {
@@ -473,14 +468,17 @@ require("lazy").setup({
 			format_on_save = function(bufnr)
 				local disable_filetypes = { c = true, cpp = true }
 				return {
-					timeout_ms = 500,
+					timeout_ms = 3000,
 					lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
 				}
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "black", "isort" },
-				typescript = { "prettier" },
+				javascript = { "eslint_d", "prettier" },
+				typescript = { "eslint_d", "prettier" },
+				javascriptreact = { "eslint_d", "prettier" },
+				typescriptreact = { "eslint_d", "prettier" },
 			},
 		},
 	},
