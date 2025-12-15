@@ -120,5 +120,3 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
-# bun completions
-[ -s "/Users/gytis/.bun/_bun" ] && source "/Users/gytis/.bun/_bun"
