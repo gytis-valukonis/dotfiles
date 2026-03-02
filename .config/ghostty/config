@@ -1,0 +1,8 @@
+# WezTerm: config.color_scheme = "nord"
+# Ghostty uses "theme" (built-in or custom).
+theme = Nord
+
+# WezTerm: config.font = wezterm.font("GeistMono Nerd Font Mono")
+font-family = "GeistMono Nerd Font Mono"
+
+window-padding-x = 10
