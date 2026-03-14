@@ -14,3 +14,4 @@ brew install zoxide
 brew install --cask font-geist-mono-nerd-font
 brew install mise
 brew install usage
+brew install ripgrep
