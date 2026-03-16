@@ -5,4 +5,6 @@ theme = Nord
 # WezTerm: config.font = wezterm.font("GeistMono Nerd Font Mono")
 font-family = "GeistMono Nerd Font Mono"
 
+shell-integration-features = no-title
+
 window-padding-x = 10

@@ -1,4 +1,4 @@
-console_title_template = '{{ .Folder }}'
+console_title_template = '{{ .PWD }}{{ if .Segments.Git.HEAD }} [{{.Segments.Git.HEAD}}]{{ end }}'
 version = 3
 final_space = true
 
