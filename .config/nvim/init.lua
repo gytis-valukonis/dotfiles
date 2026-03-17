@@ -89,6 +89,11 @@ require("lazy").setup({
 				topdelete = { text = "‾" },
 				changedelete = { text = "~" },
 			},
+			on_attach = function(bufnr)
+				local gs = package.loaded.gitsigns
+				vim.keymap.set("n", "]c", gs.next_hunk, { buffer = bufnr, desc = "Next git hunk" })
+				vim.keymap.set("n", "[c", gs.prev_hunk, { buffer = bufnr, desc = "Prev git hunk" })
+			end,
 		},
 	},
 	{
@@ -309,6 +314,8 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>sn", function()
 				builtin.find_files({ cwd = vim.fn.stdpath("config") })
 			end, { desc = "[S]earch [N]eovim files" })
+
+			vim.keymap.set("n", "<leader>sc", builtin.git_status, { desc = "[S]earch git [C]hanges" })
 		end,
 	},
 
