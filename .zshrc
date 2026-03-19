@@ -1,5 +1,3 @@
-[[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
-
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
@@ -24,6 +22,8 @@ eval $($BREW_DIR/bin/brew shellenv)
 eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/lean.toml)"
 
 autoload -U compinit && compinit
+
+[[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
 
 alias tf="terraform"
 

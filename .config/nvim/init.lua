@@ -161,22 +161,30 @@ require("lazy").setup({
 					local modify = vim.fn.fnamemodify
 
 					local results = {
-						filepath,
 						modify(filepath, ":."),
-						modify(filepath, ":~"),
+						filepath,
 						filename,
-						modify(filename, ":r"),
-						modify(filename, ":e"),
 					}
 
-					vim.ui.select({
-						"1. Absolute path: " .. results[1],
-						"2. Path relative to CWD: " .. results[2],
-						"3. Path relative to HOME: " .. results[3],
-						"4. Filename: " .. results[4],
-						"5. Filename without extension: " .. results[5],
-						"6. Extension of the filename: " .. results[6],
-					}, { prompt = "Choose to copy to clipboard:" }, function(choice)
+					local choices = {
+						"1. Path relative to CWD: " .. results[1],
+						"2. Absolute path: " .. results[2],
+						"3. Filename: " .. results[3],
+					}
+
+					local file_dir = modify(filepath, ":h")
+					local remote_url = vim.fn.system("git -C " .. vim.fn.shellescape(file_dir) .. " remote get-url origin 2>/dev/null"):gsub("\n", "")
+					if remote_url:find("github.com") then
+						local repo = remote_url:gsub("git@github.com:", ""):gsub("https://github.com/", ""):gsub("%.git$", "")
+						local branch = vim.fn.system("git -C " .. vim.fn.shellescape(file_dir) .. " rev-parse --abbrev-ref HEAD 2>/dev/null"):gsub("\n", "")
+						local repo_root = vim.fn.system("git -C " .. vim.fn.shellescape(file_dir) .. " rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
+						local rel_path = filepath:sub(#repo_root + 2)
+						local github_url = "https://github.com/" .. repo .. "/blob/" .. branch .. "/" .. rel_path
+						results[4] = github_url
+						table.insert(choices, "4. GitHub URL: " .. github_url)
+					end
+
+					vim.ui.select(choices, { prompt = "Choose to copy to clipboard:" }, function(choice)
 						if choice then
 							local i = tonumber(choice:sub(1, 1))
 							if i then
