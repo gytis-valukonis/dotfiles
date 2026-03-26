@@ -173,11 +173,18 @@ require("lazy").setup({
 					}
 
 					local file_dir = modify(filepath, ":h")
-					local remote_url = vim.fn.system("git -C " .. vim.fn.shellescape(file_dir) .. " remote get-url origin 2>/dev/null"):gsub("\n", "")
+					local remote_url = vim.fn
+						.system("git -C " .. vim.fn.shellescape(file_dir) .. " remote get-url origin 2>/dev/null")
+						:gsub("\n", "")
 					if remote_url:find("github.com") then
-						local repo = remote_url:gsub("git@github.com:", ""):gsub("https://github.com/", ""):gsub("%.git$", "")
-						local branch = vim.fn.system("git -C " .. vim.fn.shellescape(file_dir) .. " rev-parse --abbrev-ref HEAD 2>/dev/null"):gsub("\n", "")
-						local repo_root = vim.fn.system("git -C " .. vim.fn.shellescape(file_dir) .. " rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
+						local repo =
+							remote_url:gsub("git@github.com:", ""):gsub("https://github.com/", ""):gsub("%.git$", "")
+						local branch = vim.fn
+							.system("git -C " .. vim.fn.shellescape(file_dir) .. " rev-parse --abbrev-ref HEAD 2>/dev/null")
+							:gsub("\n", "")
+						local repo_root = vim.fn
+							.system("git -C " .. vim.fn.shellescape(file_dir) .. " rev-parse --show-toplevel 2>/dev/null")
+							:gsub("\n", "")
 						local rel_path = filepath:sub(#repo_root + 2)
 						local github_url = "https://github.com/" .. repo .. "/blob/" .. branch .. "/" .. rel_path
 						results[4] = github_url
@@ -480,32 +487,53 @@ require("lazy").setup({
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-			local servers = {}
+			local servers = {
+				stylua = {}, -- Used to format Lua code
+				lua_ls = {
+					on_init = function(client)
+						if client.workspace_folders then
+							local path = client.workspace_folders[1].name
+							if
+								path ~= vim.fn.stdpath("config")
+								and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+							then
+								return
+							end
+						end
+						client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+							runtime = {
+								version = "LuaJIT",
+								path = { "lua/?.lua", "lua/?/init.lua" },
+							},
+							workspace = {
+								checkThirdParty = false,
+								library = vim.tbl_extend("force", vim.api.nvim_get_runtime_file("", true), {
+									"${3rd}/luv/library",
+									"${3rd}/busted/library",
+								}),
+							},
+						})
+					end,
+					settings = {
+						Lua = {},
+					},
+				},
+			}
 			-- Load machine-local LSP servers from ~/.nvim-servers.lua (not tracked in dotfiles)
 			local ok, local_servers = pcall(dofile, vim.fn.expand("~/.nvim-servers.lua"))
 			if ok and type(local_servers) == "table" then
-				servers = local_servers
+				servers = vim.tbl_extend("force", servers, local_servers)
 			end
 
-			require("mason").setup()
-
 			local ensure_installed = vim.tbl_keys(servers or {})
-			vim.list_extend(ensure_installed, {
-				"stylua", -- Used to format Lua code
-			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-			require("mason-lspconfig").setup({
-				ensure_installed = {},
-				handlers = {
-					function(server_name)
-						local server = servers[server_name] or {}
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						require("lspconfig")[server_name].setup(server)
-					end,
-				},
-			})
-
+			for server_name, server_config in pairs(servers) do
+				local server = vim.deepcopy(server_config)
+				server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+				vim.lsp.config(server_name, server)
+				vim.lsp.enable(server_name)
+			end
 		end,
 	},
 
@@ -668,12 +696,16 @@ require("lazy").setup({
 			vim.api.nvim_create_autocmd("FileType", {
 				callback = function(args)
 					local ft = vim.bo[args.buf].filetype
-					if ft == "" then return end
+					if ft == "" then
+						return
+					end
 					local lang = vim.treesitter.language.get_lang(ft)
 					if lang then
 						-- Only install if parser is not already available
 						if not pcall(vim.treesitter.language.add, lang) then
-							pcall(function() require("nvim-treesitter").install({ lang }) end)
+							pcall(function()
+								require("nvim-treesitter").install({ lang })
+							end)
 						end
 						pcall(vim.treesitter.start, args.buf)
 					end
@@ -709,26 +741,62 @@ require("lazy").setup({
 					})
 
 					-- Select keymaps
-					vim.keymap.set({ "x", "o" }, "af", function() select.select_textobject("@function.outer", "textobjects") end)
-					vim.keymap.set({ "x", "o" }, "if", function() select.select_textobject("@function.inner", "textobjects") end)
-					vim.keymap.set({ "x", "o" }, "ac", function() select.select_textobject("@class.outer", "textobjects") end)
-					vim.keymap.set({ "x", "o" }, "ic", function() select.select_textobject("@class.inner", "textobjects") end)
-					vim.keymap.set({ "x", "o" }, "as", function() select.select_textobject("@local.scope", "locals") end)
+					vim.keymap.set({ "x", "o" }, "af", function()
+						select.select_textobject("@function.outer", "textobjects")
+					end)
+					vim.keymap.set({ "x", "o" }, "if", function()
+						select.select_textobject("@function.inner", "textobjects")
+					end)
+					vim.keymap.set({ "x", "o" }, "ac", function()
+						select.select_textobject("@class.outer", "textobjects")
+					end)
+					vim.keymap.set({ "x", "o" }, "ic", function()
+						select.select_textobject("@class.inner", "textobjects")
+					end)
+					vim.keymap.set({ "x", "o" }, "as", function()
+						select.select_textobject("@local.scope", "locals")
+					end)
 
 					-- Move keymaps
-					vim.keymap.set({ "n", "x", "o" }, "]m", function() move.goto_next_start("@function.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "]]", function() move.goto_next_start("@class.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "]o", function() move.goto_next_start({ "@loop.inner", "@loop.outer" }, "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "]s", function() move.goto_next_start("@local.scope", "locals") end)
-					vim.keymap.set({ "n", "x", "o" }, "]z", function() move.goto_next_start("@fold", "folds") end)
-					vim.keymap.set({ "n", "x", "o" }, "]M", function() move.goto_next_end("@function.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "][", function() move.goto_next_end("@class.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "[m", function() move.goto_previous_start("@function.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "[[", function() move.goto_previous_start("@class.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "[M", function() move.goto_previous_end("@function.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "[]", function() move.goto_previous_end("@class.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "]d", function() move.goto_next("@conditional.outer", "textobjects") end)
-					vim.keymap.set({ "n", "x", "o" }, "[d", function() move.goto_previous("@conditional.outer", "textobjects") end)
+					vim.keymap.set({ "n", "x", "o" }, "]m", function()
+						move.goto_next_start("@function.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "]]", function()
+						move.goto_next_start("@class.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "]o", function()
+						move.goto_next_start({ "@loop.inner", "@loop.outer" }, "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "]s", function()
+						move.goto_next_start("@local.scope", "locals")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "]z", function()
+						move.goto_next_start("@fold", "folds")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "]M", function()
+						move.goto_next_end("@function.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "][", function()
+						move.goto_next_end("@class.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "[m", function()
+						move.goto_previous_start("@function.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "[[", function()
+						move.goto_previous_start("@class.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "[M", function()
+						move.goto_previous_end("@function.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "[]", function()
+						move.goto_previous_end("@class.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "]d", function()
+						move.goto_next("@conditional.outer", "textobjects")
+					end)
+					vim.keymap.set({ "n", "x", "o" }, "[d", function()
+						move.goto_previous("@conditional.outer", "textobjects")
+					end)
 				end,
 			},
 		},
