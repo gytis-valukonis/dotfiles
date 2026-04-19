@@ -487,6 +487,65 @@ require("lazy").setup({
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
+			local function is_executable(command)
+				return type(command) == "string" and command ~= "" and vim.fn.executable(command) == 1
+			end
+
+			local function resolve_ts_ls_cmd(root_dir)
+				local candidates = {}
+				if type(root_dir) == "string" and root_dir ~= "" then
+					table.insert(candidates, root_dir .. "/node_modules/.bin/typescript-language-server")
+				end
+				table.insert(candidates, vim.fn.stdpath("data") .. "/mason/bin/typescript-language-server")
+
+				local path_cmd = vim.fn.exepath("typescript-language-server")
+				if path_cmd ~= "" then
+					table.insert(candidates, path_cmd)
+				end
+
+				for _, candidate in ipairs(candidates) do
+					if is_executable(candidate) then
+						return { candidate, "--stdio" }
+					end
+				end
+
+				return { "typescript-language-server", "--stdio" }
+			end
+
+			local function ts_cmd_needs_fallback(cmd)
+				if type(cmd) ~= "table" then
+					return true
+				end
+				if type(cmd[1]) ~= "string" or cmd[1] == "" or vim.fn.executable(cmd[1]) == 0 then
+					return true
+				end
+
+				for i = 2, #cmd do
+					local arg = cmd[i]
+					if type(arg) == "string" and arg:find("/") and not vim.uv.fs_stat(arg) then
+						return true
+					end
+				end
+
+				return false
+			end
+
+			local function with_ts_ls_fallback(server_config)
+				local config = vim.deepcopy(server_config or {})
+				local user_on_new_config = config.on_new_config
+
+				config.on_new_config = function(new_config, root_dir)
+					if ts_cmd_needs_fallback(new_config.cmd) then
+						new_config.cmd = resolve_ts_ls_cmd(root_dir)
+					end
+					if type(user_on_new_config) == "function" then
+						user_on_new_config(new_config, root_dir)
+					end
+				end
+
+				return config
+			end
+
 			local servers = {
 				stylua = {}, -- Used to format Lua code
 				lua_ls = {
@@ -518,6 +577,7 @@ require("lazy").setup({
 						Lua = {},
 					},
 				},
+				ts_ls = with_ts_ls_fallback({}),
 			}
 			-- Load machine-local LSP servers from ~/.nvim-servers.lua (not tracked in dotfiles)
 			local ok, local_servers = pcall(dofile, vim.fn.expand("~/.nvim-servers.lua"))
@@ -525,7 +585,25 @@ require("lazy").setup({
 				servers = vim.tbl_extend("force", servers, local_servers)
 			end
 
-			local ensure_installed = vim.tbl_keys(servers or {})
+			-- Accept legacy tsserver config names from machine-local overrides.
+			if servers.tsserver and not servers.ts_ls then
+				servers.ts_ls = servers.tsserver
+			end
+			servers.tsserver = nil
+			if servers.ts_ls then
+				servers.ts_ls = with_ts_ls_fallback(servers.ts_ls)
+			end
+
+			local lsp_to_package = {}
+			local has_mason_lspconfig, mason_lspconfig = pcall(require, "mason-lspconfig")
+			if has_mason_lspconfig and type(mason_lspconfig.get_mappings) == "function" then
+				lsp_to_package = mason_lspconfig.get_mappings().lspconfig_to_package or {}
+			end
+
+			local ensure_installed = {}
+			for server_name in pairs(servers or {}) do
+				table.insert(ensure_installed, lsp_to_package[server_name] or server_name)
+			end
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 			for server_name, server_config in pairs(servers) do
