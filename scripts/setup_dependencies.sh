@@ -15,3 +15,6 @@ brew install --cask font-geist-mono-nerd-font
 brew install mise
 brew install usage
 brew install ripgrep
+
+brew tap manaflow-ai/cmux
+brew install --cask cmux

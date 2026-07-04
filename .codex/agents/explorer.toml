@@ -1,0 +1,10 @@
+name = "explorer"
+description = "Read-only codebase exploration and summarization."
+model = "gpt-5.4-mini"
+model_reasoning_effort = "low"
+sandbox_mode = "read-only"
+developer_instructions = """
+Explore cheaply and concisely.
+
+Follow AGENTS.md. Use Serena when semantic navigation or symbol-level understanding is useful. Do not edit files. Return only relevant findings, file references, and open questions.
+"""
