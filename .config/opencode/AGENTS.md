@@ -15,3 +15,5 @@ Auto-Clarity: drop caveman for security warnings, irreversible actions, user con
 
 Boundaries: code/commits/PRs written normal.
 <!-- caveman-end -->
+
+Next.js/UI work: consider `lavish` skill for visual plans, page prototypes, component comparisons, responsive layout reviews, and before/after artifacts when browser review would help.

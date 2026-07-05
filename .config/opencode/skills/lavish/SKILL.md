@@ -1,0 +1,77 @@
+---
+name: lavish
+description: Turn complex or visual agent responses into rich, reviewable HTML artifacts the user can annotate and send feedback on, using the lavish-axi CLI. Use in Next.js projects for UI plans, page prototypes, component comparisons, diagrams, tables, code diffs, reports, or anything easier to grasp visually than as prose.
+metadata:
+  hermes:
+    tags: [html, review, artifacts, visualization, nextjs]
+    category: productivity
+---
+
+# Lavish Editor
+
+Lavish Editor helps agents turn rich HTML artifacts into collaborative human review surfaces. Whenever you are about to give the user a complex response that will be easier to understand via a rich or interactive page, consider using Lavish Editor. First generate an interactive HTML artifact according to the user request, then run `npx -y lavish-axi <html-file>` so the user can visually review it, annotate elements or selected text, queue prompts, and send feedback back through `npx -y lavish-axi poll`.
+
+You do not need lavish-axi installed globally. Invoke it with `npx -y lavish-axi <html-file>`.
+If lavish-axi output shows a follow-up command starting with `lavish-axi`, run it as `npx -y lavish-axi ...` instead.
+
+## Request
+
+$ARGUMENTS
+
+If the request above is non-empty, the user invoked `/lavish` explicitly. Build an HTML artifact for that request now, following the workflow below.
+If it is empty, infer what to visualize from the conversation.
+
+## When to use
+
+Use lavish-axi when the user asks for a visual artifact, HTML explainer, interactive prototype, review surface, product or technical plan, comparison, report, or browser-based feedback loop.
+
+In Next.js projects, consider lavish-axi for UI-heavy work: app router/page plans, component state comparisons, responsive layout reviews, design-system proposals, migration plans, and before/after visual diffs.
+
+## Workflow
+
+1. Create the HTML artifact, defaulting to `.lavish/<name>.html` in the working directory.
+2. Run `npx -y lavish-axi <html-file>` to open or resume a review session in the browser.
+3. Run `npx -y lavish-axi poll <html-file>` to long-poll for the user's annotations, queued prompts, and browser-reported `layout_warnings`.
+4. If poll returns `layout_warnings`, follow the returned `next_step`: fix and re-check fresh error-severity findings, but proceed with a note instead of looping when every current warning is persistent or low-severity.
+5. Apply human feedback, then poll again with `--agent-reply "<message>"` to reply in the browser and keep the loop going.
+6. Run `npx -y lavish-axi end <html-file>` when the review is finished.
+7. If the user ends the session from the browser, `npx -y lavish-axi <html-file>` refuses to reopen it. Only pass `--reopen` when the user asks for further review or something important needs their visual attention. Otherwise deliver remaining updates directly in chat.
+
+The poll stays silent until the user acts or the real browser reports fresh layout warnings. Leave it running; do not kill it. If the harness limits foreground command runtime, run the poll as a background task. If it gets killed or times out anyway, re-run it because queued feedback is preserved.
+
+## Visual Guidance
+
+- Use visual hierarchy to make important decisions, risks, tradeoffs, and next actions obvious at a glance.
+- Use sections, cards, tables, diagrams, annotated snippets, and side-by-side comparisons instead of long prose.
+- Choose typography, spacing, color, and layout deliberately so the artifact has a clear point of view.
+- Prevent horizontal overflow at every nesting level: nested grid/flex children also need `minmax(0, 1fr)` tracks and `min-width: 0`, especially when badges, labels, or status text use wide pixel or monospace fonts.
+- When the artifact describes existing UI or state, show it instead: capture screenshots of the real pages when feasible and embed them. Reserve prose for rationale, tradeoffs, and open questions.
+
+## Playbooks
+
+Run `npx -y lavish-axi playbook <id>` for focused guidance. One artifact often combines several playbooks, so open each matching playbook before writing HTML.
+
+For flows, architecture, state, or sequence diagrams, do not hand-build boxes-and-arrows from div/flexbox. Open the diagram playbook and use Mermaid unless SVG is needed for richly annotated nodes.
+
+- `diagram` - Map relationships, flows, state, and architecture.
+- `table` - Turn dense records into scan-friendly review surfaces.
+- `comparison` - Show options, tradeoffs, and current vs target behavior.
+- `plan` - Explain a product or technical plan before implementation.
+- `code` - Render source code, files, patches, PR diffs, and before/after code inside Lavish artifacts.
+- `input` - Collect user input on decisions, choices, preferences, triage, scope, or structured feedback from within the artifact.
+- `slides` - Create a deliberate presentation when slides are requested.
+
+## Commands And Rules
+
+- Run `npx -y lavish-axi <html-file>` to open or resume a Lavish Editor session.
+- Unless the user specifies another location, create HTML artifacts in the current working directory under `.lavish/`.
+- Lavish serves the HTML file through a local Express server. If the HTML references local assets, copy them into the same directory as the HTML file and reference them with relative paths. Never prepend `/`; root paths will not work.
+- Run `npx -y lavish-axi poll <html-file>` to wait for user feedback or browser-reported layout warnings.
+- Run `npx -y lavish-axi end <html-file>` to end a session as the agent.
+- Run `npx -y lavish-axi export <html-file> [--out <path>]` to write a portable copy with local assets inlined.
+- Run `npx -y lavish-axi share <html-file> [--password <pw>] [--token <t>]` to publish the artifact on `https://ht-ml.app`, a third-party hosting service not part of Lavish. Shares are public by default. Use `--password` for private password-protected pages.
+- Run `npx -y lavish-axi stop` to shut down the background server.
+- Run `npx -y lavish-axi design` when no project design source exists and you need the Lavish-recommended Tailwind CSS v4 plus DaisyUI v5 CDN fallback.
+- Before writing HTML, choose the design direction in this priority order: user-requested look, then the target project's design system, then Lavish's fallback from `npx -y lavish-axi design`.
+- When the artifact previews or mocks a specific app's UI, render it in that app's design system so it faithfully shows the product, even if running from a different repo.
+- When delivering the artifact, state which design source you used and why.
