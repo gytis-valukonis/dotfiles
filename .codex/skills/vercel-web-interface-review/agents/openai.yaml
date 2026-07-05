@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vercel UI Review"
+  short_description: "Review UI files against Vercel web UI rules"
+  default_prompt: "Use $vercel-web-interface-review to review these UI files for Vercel Web Interface Guidelines compliance: <file-or-pattern>."

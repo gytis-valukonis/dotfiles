@@ -79,19 +79,39 @@ ensure_serena() {
   fi
 }
 
-install_cmux_browser_skill() {
-  if [ "${CMUX_BROWSER_SKILL_INSTALL:-1}" = "0" ]; then
-    log "Skipping cmux-browser skill install"
+install_npx_agent_skills() {
+  if [ "${NPX_AGENT_SKILLS_INSTALL:-1}" = "0" ]; then
+    log "Skipping npx agent skill installs"
     return
   fi
 
   if ! have npx; then
-    warn "npx is required to install cmux-browser skill. Install Node.js/npm first."
+    warn "npx is required to install agent skills. Install Node.js/npm first."
     return
   fi
 
-  log "Installing cmux-browser skill"
-  run_in_home npx skills add https://github.com/manaflow-ai/cmux --skill cmux-browser
+  local specs=(
+    "obra/superpowers@brainstorming"
+    "manaflow-ai/cmux@cmux-browser"
+    "anthropics/skills@frontend-design"
+    "kunchenguid/lavish-axi@lavish"
+    "vercel-labs/agent-skills@vercel-react-best-practices"
+    "vercel-labs/agent-skills@web-design-guidelines"
+  )
+  local spec package skill
+
+  for spec in "${specs[@]}"; do
+    package="${spec%@*}"
+    skill="${spec##*@}"
+
+    if [ "$skill" = "cmux-browser" ] && [ "${CMUX_BROWSER_SKILL_INSTALL:-1}" = "0" ]; then
+      log "Skipping cmux-browser skill install"
+      continue
+    fi
+
+    log "Installing $skill skill"
+    run_in_home npx -y skills add "$package" --skill "$skill" --global --yes --agent codex opencode
+  done
 }
 
 install_codex_cli() {
@@ -375,7 +395,7 @@ install_caveman() {
 main() {
   log "Setting up AI tooling"
   install_selected_cli_tools
-  install_cmux_browser_skill
+  install_npx_agent_skills
   ensure_serena
   setup_serena_claude_code
   setup_serena_codex

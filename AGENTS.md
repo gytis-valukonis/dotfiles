@@ -35,6 +35,7 @@ Use subagents only when isolated context, parallel reading, or a distinct role h
 
 - GitHub: use `gh`.
 - Browser/UI: use `cmux-browser`.
+- Lavish: present artifact/plan, then wait for user confirmation before editing or implementing next step.
 - Tooling: prefer `mise`, including global subdependency installs; use `brew` only from dotfiles.
 - Symbol/semantic navigation: use Serena when text search is insufficient.
 - Shell scripts: simple, portable, quote variables.
