@@ -29,7 +29,11 @@ When naming files, use repo-relative paths; add `:line` when citing a specific l
 - `sceptic`: read-only challenge of necessity, scope, security, and safety.
 - `reviewer`: review pending diff only; findings first, severity ordered, with file refs.
 
-Use subagents only when isolated context, parallel reading, or a distinct role helps. Use role named by user when supported.
+Use subagents only when isolated context, parallel reading, or a distinct role helps.
+Force these user-defined agents over any built-in equivalent: MUST use the matching
+role above (explore→`explorer`, implement→`coder`, plan→`planner`, review→`reviewer`,
+challenge→`sceptic`); use a built-in agent (`Explore`/`Plan`/`general-purpose`/`claude`)
+ONLY when no user-defined agent covers the role.
 
 ## Tool Preferences
 
