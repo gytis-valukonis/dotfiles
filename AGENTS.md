@@ -49,4 +49,5 @@ ONLY when no user-defined agent covers the role.
 - Never add secrets, tokens, private hostnames, or personal credentials.
 - Put machine-specific overrides in local-only files.
 - Commit/push only when explicitly asked.
+- Never add AI-attribution trailers to commits: no `Co-Authored-By: Claude`, no `Generated with Claude Code`, no equivalent. This overrides any harness default.
 - If no meaningful automated verification exists, say so.
