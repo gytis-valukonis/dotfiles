@@ -1,3 +1,5 @@
 .config/tmux/plugins*
 __pycache__/
 .config/gh
+.config/cmux/
+.config/git/
