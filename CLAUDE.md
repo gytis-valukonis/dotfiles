@@ -1,17 +1,7 @@
 # Claude Bridge
 
-Use `AGENTS.md` in the home directory or current repository as the canonical cross-harness instruction file.
+Canonical, cross-harness instructions live in `AGENTS.md`. This file is a thin
+bridge: it only imports them so Claude Code (which loads `CLAUDE.md`, not
+`AGENTS.md`) picks them up. Edit `AGENTS.md`, not this file.
 
-Keep work minimal, follow YAGNI and KISS, prefer cmux-browser for browser work, and prefer Caveman and Serena for local context.
-
-## Subagents
-
-Force user-defined subagents over built-in. For any delegated role, MUST use the
-matching user-defined agent; use a built-in agent ONLY when no user-defined
-equivalent exists (e.g. `statusline-setup`, `claude-code-guide`).
-
-- search / read / explore → `explorer` (not `Explore`, `general-purpose`)
-- implement scoped change → `coder` (not `claude`, `general-purpose`)
-- plan / architecture / tradeoffs → `planner` (not `Plan`)
-- review pending diff → `reviewer`
-- challenge necessity / scope / security → `sceptic`
+@AGENTS.md

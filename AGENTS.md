@@ -51,3 +51,10 @@ ONLY when no user-defined agent covers the role.
 - Commit/push only when explicitly asked.
 - Never add AI-attribution trailers to commits: no `Co-Authored-By: Claude`, no `Generated with Claude Code`, no equivalent. This overrides any harness default.
 - If no meaningful automated verification exists, say so.
+
+## Local overrides
+
+Machine-local overrides load last (highest precedence), via the import below.
+Optional: keep `AGENTS.local.md` untracked for per-machine or private rules.
+
+@AGENTS.local.md
