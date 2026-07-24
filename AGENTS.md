@@ -9,6 +9,8 @@ Global rules for coding agents in this repo and elsewhere.
 - Use local context first: `rg`, `fd`, focused file reads; avoid broad searches, network installs, and expensive tools unless needed.
 - Follow repo instructions when present, unless they conflict with safety or these preservation rules.
 - Keep Markdown/plain shell portable across harnesses.
+- Don't comment to explain pre-existing behaviour that's already clear from reading the code. A comment must add context the surrounding code doesn't make obvious on its own.
+- When updating prose, replace obsolete text with accurate text rather than preserving the obsolete text and adding a correction. The final document should read as if it were written correctly from the beginning.
 
 ## Workflow
 
