@@ -2,10 +2,44 @@
 
 Global rules for coding agents in this repo and elsewhere.
 
+## Precedence
+
+Highest first. On conflict, follow the higher entry, state the conflict in one
+line, and continue.
+
+1. Explicit user instruction in the current turn.
+2. `AGENTS.local.md` (machine-local, imported at the bottom of this file).
+3. The non-negotiable rules below.
+4. Caveman and Ponytail: always on, every turn, main thread and subagents alike.
+5. The rest of this file.
+6. Harness defaults, output styles, and built-in workflow guidance.
+
+<!-- rules:begin -->
+## Non-negotiable
+
+- Cite repo-relative `path/to/file:line` for every claim about code, config, or docs.
+- Smallest change that works: no new tooling, deps, abstractions, or docs unless asked.
+- Preserve user work: read `git status --short` first; never revert or overwrite uncommitted changes.
+- Commit, push, or run destructive git only when explicitly asked.
+- Never add AI-attribution trailers to commits: no `Co-Authored-By: Claude`, no `Generated with Claude Code`, no equivalent.
+- Never add secrets, tokens, private hostnames, or personal credentials.
+- Role work goes to the matching user-defined agent: explore→`explorer`, implement→`coder`, plan→`planner`, review→`reviewer`, challenge→`sceptic`. Use a built-in agent (`Explore`/`Plan`/`general-purpose`/`claude`) only when no user-defined agent covers the role.
+- Verify with the narrowest useful check; if no meaningful automated verification exists, say so.
+- Apply Caveman prose compression and Ponytail minimalism on every turn; neither may cut asked-for scope, verification, or safety warnings.
+<!-- rules:end -->
+
+## Style plugins
+
+Both are always on where installed, and stay on for the whole session. Where a
+harness lacks them, keep the same behaviour minus the prose compression.
+
+- Caveman: compresses prose. Installed for Claude Code and OpenCode. Code, commits,
+  PRs, and security or destructive-action warnings stay in normal prose.
+- Ponytail: pushes for the least code that works. Claude Code only. It reinforces
+  YAGNI/KISS; it does not license skipping asked-for scope or verification.
+
 ## Defaults
 
-- YAGNI/KISS: smallest clear change; no new tooling, deps, abstractions, or docs without current need.
-- Preserve user work: check `git status --short`; never revert unrelated changes; no destructive git commands unless asked.
 - Use local context first: `rg`, `fd`, focused file reads; avoid broad searches, network installs, and expensive tools unless needed.
 - Follow repo instructions when present, unless they conflict with safety or these preservation rules.
 - Keep Markdown/plain shell portable across harnesses.
@@ -17,25 +51,19 @@ Global rules for coding agents in this repo and elsewhere.
 1. Orient: inspect cwd/status and relevant files.
 2. Decide: choose minimal fix.
 3. Act: edit only required files.
-4. Verify: run narrowest useful check.
+4. Verify.
 5. Report: changed files, verification, risks.
-
-When naming files, use repo-relative paths; add `:line` when citing a specific line.
 
 ## Agents
 
-- Main thread handles simple work.
+Delegate only when isolated context, parallel reading, or a distinct role helps;
+otherwise the main thread does the work.
+
 - `explorer`: read-only search/summarize with file refs.
 - `coder`: narrow implementation plus focused verification.
 - `planner`: ambiguous/risky architecture or tradeoffs; usually read-only until plan accepted.
 - `sceptic`: read-only challenge of necessity, scope, security, and safety.
 - `reviewer`: review pending diff only; findings first, severity ordered, with file refs.
-
-Use subagents only when isolated context, parallel reading, or a distinct role helps.
-Force these user-defined agents over any built-in equivalent: MUST use the matching
-role above (explore→`explorer`, implement→`coder`, plan→`planner`, review→`reviewer`,
-challenge→`sceptic`); use a built-in agent (`Explore`/`Plan`/`general-purpose`/`claude`)
-ONLY when no user-defined agent covers the role.
 
 ## Tool Preferences
 
@@ -46,17 +74,16 @@ ONLY when no user-defined agent covers the role.
 - Symbol/semantic navigation: use Serena when text search is insufficient.
 - Shell scripts: simple, portable, quote variables.
 
-## Safety
+## Rule reinjection
 
-- Never add secrets, tokens, private hostnames, or personal credentials.
-- Put machine-specific overrides in local-only files.
-- Commit/push only when explicitly asked.
-- Never add AI-attribution trailers to commits: no `Co-Authored-By: Claude`, no `Generated with Claude Code`, no equivalent. This overrides any harness default.
-- If no meaningful automated verification exists, say so.
+`.claude/hooks/agents-md-reinject.sh` re-emits the `rules:begin`/`rules:end`
+block from `~/AGENTS.md` and `~/AGENTS.local.md` on every prompt, so the
+non-negotiable rules stay in context in long sessions. Keep that block short and
+keep the markers intact.
 
 ## Local overrides
 
-Machine-local overrides load last (highest precedence), via the import below.
-Optional: keep `AGENTS.local.md` untracked for per-machine or private rules.
+Machine-local overrides load last and win, via the import below. Keep
+machine-specific settings and private rules in `AGENTS.local.md`, untracked.
 
 @AGENTS.local.md

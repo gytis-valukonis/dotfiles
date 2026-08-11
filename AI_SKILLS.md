@@ -24,6 +24,7 @@ Skip these installs with `NPX_AGENT_SKILLS_INSTALL=0`. Skip only `cmux-browser` 
 ## Non-npx Skills
 
 - Caveman skills are installed by `install_caveman` in `scripts/setup_ai_tooling.sh` and mirrored under `.config/opencode/skills`.
+- Ponytail (YAGNI/anti-over-engineering ruleset) runs alongside Caveman in Claude Code only. Install on a new machine with `claude plugin marketplace add DietrichGebert/ponytail` then `claude plugin install ponytail@ponytail`.
 - `vercel-web-interface-review` is Codex-only and vendored under `.codex/skills/vercel-web-interface-review` because it is not discoverable through `npx skills find`.
 
 Audit current global skills with:
