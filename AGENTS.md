@@ -19,6 +19,7 @@ line, and continue.
 
 - Cite repo-relative `path/to/file:line` for every claim about code, config, or docs.
 - Smallest change that works: no new tooling, deps, abstractions, or docs unless asked.
+- Add no code comments. Only exceptions: `//nolint`, `//go:generate`, `// TODO(ticket)`. When a "why" comment looks warranted, ask before writing it; never judge your own comment as earning an exception. Repo rules phrased as "only 'why' comments in complex places" mean this.
 - Preserve user work: read `git status --short` first; never revert or overwrite uncommitted changes.
 - Commit, push, or run destructive git only when explicitly asked.
 - Never add AI-attribution trailers to commits: no `Co-Authored-By: Claude`, no `Generated with Claude Code`, no equivalent.
@@ -43,7 +44,7 @@ harness lacks them, keep the same behaviour minus the prose compression.
 - Use local context first: `rg`, `fd`, focused file reads; avoid broad searches, network installs, and expensive tools unless needed.
 - Follow repo instructions when present, unless they conflict with safety or these preservation rules.
 - Keep Markdown/plain shell portable across harnesses.
-- Don't comment to explain pre-existing behaviour that's already clear from reading the code. A comment must add context the surrounding code doesn't make obvious on its own.
+- Comments follow the non-negotiable rule above: none written unprompted, and asked for rather than assumed.
 - When updating prose, replace obsolete text with accurate text rather than preserving the obsolete text and adding a correction. The final document should read as if it were written correctly from the beginning.
 
 ## Workflow
