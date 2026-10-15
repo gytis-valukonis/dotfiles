@@ -42,6 +42,7 @@ harness lacks them, keep the same behaviour minus the prose compression.
 ## Defaults
 
 - Use local context first: `rg`, `fd`, focused file reads; avoid broad searches, network installs, and expensive tools unless needed.
+- For isolated work, use git worktrees nested under `./worktrees/<name>` at the repo root (e.g. `git worktree add worktrees/<branch> -b <branch>`). Never create worktrees elsewhere. `worktrees/` is globally git-ignored.
 - Follow repo instructions when present, unless they conflict with safety or these preservation rules.
 - Keep Markdown/plain shell portable across harnesses.
 - Comments follow the non-negotiable rule above: none written unprompted, and asked for rather than assumed.
