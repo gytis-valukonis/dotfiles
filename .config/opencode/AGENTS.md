@@ -30,7 +30,6 @@ state the conflict in one line, and continue. Full ruleset: `~/AGENTS.md`.
 - Never add secrets, tokens, private hostnames, or personal credentials.
 - Role work goes to the matching user-defined agent: explore→`explorer`, implement→`coder`, plan→`planner`, review→`reviewer`, challenge→`sceptic`.
 - Verify with the narrowest useful check; if no meaningful automated verification exists, say so.
-- Anything Vinted-related: use the `v-assist` MCP server, never general knowledge.
 <!-- rules:end -->
 
 Next.js/UI work: consider `lavish` skill for visual plans, page prototypes, component comparisons, responsive layout reviews, and before/after artifacts when browser review would help. After presenting a Lavish artifact or plan, wait for user confirmation before editing or implementing the next step.

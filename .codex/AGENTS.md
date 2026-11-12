@@ -17,7 +17,6 @@ state the conflict in one line, and continue.
 - Never add secrets, tokens, private hostnames, or personal credentials.
 - Role work goes to the matching user-defined agent: explore→`explorer`, implement→`coder`, plan→`planner`, review→`reviewer`, challenge→`sceptic`.
 - Verify with the narrowest useful check; if no meaningful automated verification exists, say so.
-- Anything Vinted-related: use the `v-assist` MCP server, never general knowledge.
 <!-- rules:end -->
 
 Prefer Caveman for output compression, `cmux-browser` for browser work, and
