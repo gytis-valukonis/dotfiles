@@ -120,3 +120,9 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
+git-prune() {
+	git fetch -p
+	git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads \
+	  | awk '$2 == "[gone]" {print $1}' \
+	  | xargs -n1 git branch -D
+}
